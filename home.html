@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <base target="_top"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  
+  <style>
+ input[type=text],input[type=date]{
+  border-radius: 0px 5px 5px 0px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  width: 75%;
+  height: 40px;
+  padding: 0px 15px;
+}
+  body {
+  margin: auto;
+  background: #2d5898;  
+  font-family: 'Open Sans', sans-serif;
+  }
+  h1,h4,p,.ime{
+   color:white;
+  }
+  .ime{
+    vertical-align: super;
+  }
+  input[type='checkbox'] {
+  width:20px;
+  height:20px;
+  
+  }
+
+
+button {
+  background-color: #247348;
+  color: #FFF;
+  text-align: center;
+  width: 90%
+  border:0;
+  padding: 17px 25px;
+  //border-radius: 0px 0px 5px 5px;
+  cursor: pointer;
+  margin-top: 10x;
+  font-size: 18px;
+}
+
+
+  </style>
+   
+  <script>
+  
+  
+
+  
+  $(function() {
+     clickRadnici();
+  });
+   
+   function checkMySelf(me){
+    var str =  $(me).attr('id');
+      if(me.checked)
+        $(me).prop("value", str);
+      else 
+        $(me).prop("value","");
+    }
+
+    function buildTagList(availableTags){
+    $("#radnici").html("");
+    availableTags.forEach(function(item){
+      $("#radnici").append('<input type="checkbox" id="' + item + '" onclick="checkMySelf(this)" name="radnik"> <span class="ime">' +  item + ' </span><br>');
+    });
+    }
+    
+   function togglePastDays(){
+     google.script.run.withFailureHandler(errorHandler).togglePastDays();
+   }
+   
+   function errorHandler(text){
+     $("#error").html(text).show();
+     setTimeout(function() {
+       $("#error").hide();
+     }, 8000);
+   }
+   function clickNapraviGodisnjiRaspored(){
+    google.script.run.withFailureHandler(errorHandler).makeScheduleYear(document.forms[0]);
+   }
+
+   function clickHide(){
+     google.script.run.withSuccessHandler().withFailureHandler(errorHandler).togglePastDays(true)
+   }
+   function clickShow(){
+     google.script.run.withSuccessHandler().withFailureHandler(errorHandler).togglePastDays(false)
+   }
+   function test(me){
+     google.script.run.withSuccessHandler().withFailureHandler(errorHandler).testButton(document.forms[0]);
+    }
+
+    function clickRadnici() {
+    google.script.run.withSuccessHandler(buildTagList).withFailureHandler(errorHandler).getAvailableTags();
+    }
+    function clickNapraviRaspored(){
+    google.script.run.withFailureHandler(errorHandler).makeSchedule(document.forms[0]);
+    }
+    function clickPodesavanja(){
+       google.script.run.withFailureHandler(errorHandler).makeSettings();
+    }
+   </script>
+   
+   
+  </head>
+  <body>
+   <center>
+    <div id="content-main">
+    <form>
+        <div class="padding">
+        
+            <br />
+            <h1>Napravi raspored</h1>
+            <br />
+            <br />
+
+            
+            <button class="bouton-contact" onclick='clickRadnici()'  id="radniciButton">
+              <span >Osvezi Radnike</span>
+            </button>
+            <br />
+            <br />
+            
+            <button style="display:none"  class="bouton-contact" onclick='test(this)'  id="asd">
+              <span >TEST</span>
+            </button>
+            <br />
+            <br />
+            
+            
+
+
+            <div  id="radnici">
+
+            </div>
+
+            <br />
+            <br />
+
+            <input type="text" name="start"  id="pocetak" placeholder="Pocetak radnog dana [0-24](h)">
+            <br />
+            <br />
+
+            <input type="text" name="int" id="interval" placeholder="Interval (min)">
+            <br />
+            <br />
+
+
+            <input type="text" name="end"   id="kraj" placeholder="Kraj radnog dana [0-24](h)">
+            <br />
+            <br />
+
+
+            <input type="date" name="date"   id="mesec">
+            <br />
+            <br />
+
+            <input type="text" name="name"  id="ime" placeholder="Ime lista">
+            <br />
+            <br />
+
+
+            <input type="checkbox" id="vreme" onclick="checkMySelf(this)" name="vreme"> <span class="ime">Dodatno vreme</span>
+
+            <button class="bouton-contact" onclick='clickNapraviRaspored()'  id="makeSchedule">
+            Napravi raspored
+            </button>
+            <br />
+            <br /> 
+            
+            <button  onclick='clickNapraviGodisnjiRaspored()'  id="makeScheduleYear">
+            Napravi godišnji raspored
+            </button>
+            <br />
+            <br /> 
+            
+            <p id="error" style="display:none;color:#cc0000" >Poruka</p>
+
+            <button class="bouton-contact" onclick='clickPodesavanja()'  id="makeSettings">
+            Napravi podešavanja
+            </button>
+            <br>
+            <br>
+             <button  onclick='clickHide()'  id="hide">
+              Ukloni prošle dane
+             </button>
+             <br>
+             <br>
+             <button  onclick='clickShow()'  id="show">
+             Prikaži skrivene dane
+             </button>
+
+
+            <div>
+                <h4>Kako koristiti:</h4>
+                <p>1)Prilikom prvog pokretanja, prvo pritisnuti na dugme "napraviti podesavanja", zatim otici u "Settings" list i popuniti nepohodne podatke u tabelama</p>
+                <p>2)Nakon toga pritiskom na dugme "osvezi radnike" i izabrati radnike koji ce raditi u tom vremenskom periodu</p>
+                <p>3)Konacno popune se ostali podaci u ovoj formi i pritisne dugme napravi raspored, u slucaju da se ne popune podaci koristice se unapred predefinisani vrednosti</p>
+                
+            </div>
+        </div>
+        </form>
+    </div>
+    </center>
+  </body>
+</html>
+
+

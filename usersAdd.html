@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <base target="_top"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  
+  <style>
+  /*Autocomplete*/
+  .autocomplete {
+  /*the container must be positioned relative:*/
+  position: relative;
+  display: inline-block;
+  }
+  input {
+  border: 1px solid transparent;
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 16px;
+  }
+  /*input[type=text] {
+  background-color: #f1f1f1;
+  width: 100%;
+  }*/
+  input[type=submit] {
+  background-color: DodgerBlue;
+  color: #fff;
+  }
+  .autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+  }
+  .autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
+  }
+  .autocomplete-items div:hover {
+  /*when hovering an item:*/
+  background-color: #e9e9e9;
+  }
+  .autocomplete-active {
+  /*when navigating through the items using the arrow keys:*/
+  background-color: DodgerBlue !important;
+  color: #ffffff;
+  }
+  /* Autocomplete END*/
+  
+  
+  
+  
+  
+ input[type=text],input[type=date]{
+  border-radius: 0px 5px 5px 0px;
+  border: 1px solid #eee;
+  margin-bottom: 15px;
+  width: 75%;
+  height: 40px;
+  padding: 0px 15px;
+}
+  body {
+  margin: auto;
+  background: #2d5898;  
+  font-family: 'Open Sans', sans-serif;
+  }
+  h1,h3,h4,p,.ime{
+   color:white;
+  }
+  .ime{
+    vertical-align: super;
+  }
+  input[type='checkbox'] {
+  width:20px;
+  height:20px;
+  
+  }
+
+
+button {
+  background-color: #247348;
+  color: #FFF;
+  text-align: center;
+  width: 90%
+  border:0;
+  padding: 17px 25px;
+  //border-radius: 0px 0px 5px 5px;
+  cursor: pointer;
+  margin-top: 10x;
+  font-size: 18px;
+}
+
+
+  </style>
+   
+  <script>
+  
+
+ function addAutoComplete(result){
+  autocomplete(document.getElementById("nickname"), result);
+ }
+ 
+  function addAutoCompleteName(result){
+  autocomplete(document.getElementById("name"), result);
+ } 
+  function addAutoCompleteLast(result){
+  autocomplete(document.getElementById("lastName"), result);
+ } 
+  
+  $(function() {
+  google.script.run.withSuccessHandler(addAutoComplete).withFailureHandler(errorHandler).getTableData("Settings","Mušterije",2);
+  google.script.run.withSuccessHandler(addAutoCompleteLast).withFailureHandler(errorHandler).getTableData("Settings","Mušterije",1);
+  google.script.run.withSuccessHandler(addAutoCompleteName).withFailureHandler(errorHandler).getTableData("Settings","Mušterije",0);
+
+   
+  });
+  
+    function clearData(){
+     $('#nickname').val("");
+     $('#name').val("");
+     $('#lastName').val("");
+     $('#beleske').val("");
+     $('#contact').val("");
+     $('#birthday').val("");
+     }
+  
+  
+   function checkMySelf(me){
+    var str =  $(me).attr('id');
+      if(me.checked)
+        $(me).prop("value", str);
+      else 
+        $(me).prop("value","");
+    }
+
+    function addUser(){
+    google.script.run.withSuccessHandler(clearData).withFailureHandler(errorHandler).addUser(document.forms[0]);
+    }
+    
+    function errorHandler(text){
+    $("#error").html(text).show();
+    setTimeout(function() {
+    $("#error").hide();
+    }, 8000);
+    }
+    
+   </script>
+   
+   
+  </head>
+  <body>
+   <center>
+    <div id="content-main">
+    <form autocomplete="off">
+        <div class="padding">
+        
+            <br />
+            <h1>Dodaj mušteriju</h1>
+            <br />
+            <br />
+
+  
+    
+            <input type="text" name="name"   id="name" placeholder="Ime">
+    
+            <br />
+            <br />
+
+            <input type="text" name="lastName"   id="lastName" placeholder="Prezime">
+            <br />
+            <br />
+            
+            <input id="nickname" type="text" name="nickname" placeholder="Nadimak">
+            <br />
+            <br />
+
+
+           <input type="text" name="contact"  id="contact" placeholder="Kontakt telefon">
+           <br />     
+           <br />
+           
+            <input type="text" name="beleske"  id="beleske" placeholder="Nove beleške">
+            <br />
+            <br />
+
+           
+           <input type="text" name="birthday"  id="birthday" placeholder="Rodendan">
+           <br />
+           <br />
+           
+
+            <button  onclick='addUser()'  id="add">
+             Dodaj mušteriju
+             </button>
+            <br />
+            <br /> 
+            
+            
+            <p id="error" style="display:none;color:#cc0000" >Poruka</p>
+
+            <div>
+                <h4>Kako koristiti:</h4>
+                <p>1)Popuniti informacije o mušteriji</p>
+                <p>2)Pritisnuti dugme dodaj mušteriju </p>                
+            </div>
+        </div>
+        </form>
+    </div>
+    </center>
+  </body>
+</html>
+
+
